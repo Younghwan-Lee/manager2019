@@ -1,19 +1,38 @@
 #include "user.h"
 
 int load_file(LOGIN* list[], char* filename){
+#ifdef DEBUG_MODE
+	printf("DEBUG: load_file()\n");
+#endif
   int count=0;
-  FILE *datafile = fopen(filename, "r");
-  while(!feof(datafile)){
-    list[count]=(LOGIN*)malloc(sizeof(LOGIN));
-    fscanf(datafile,"%s %s",list[count]->id,list[count]->password);
-    count++;
+  FILE *datafile;
+  if((datafile = fopen(filename, "r") == NULL)){
+    int n;
+    printf("%s file not exist! make anyway? (Yes 1, No 2) > ", filename);
+    scanf("%d", &n);
+    if(n == 1)
+      datafile = fopen(filename, "w");
+    fclose(datafile);
+    count = 0;
   }
-  printf("%d records read!\n",count);\
-  fclose(datafile);
+  else{
+    datafile = fopen(filename, "r");  	
+    while(!feof(datafile)){
+      list[count]=(LOGIN*)malloc(sizeof(LOGIN));
+      fscanf(datafile,"%s %s",list[count]->id,list[count]->password);
+      count++;
+    }
+    count -= 1;
+    printf("%d records read!\n",count);
+    fclose(datafile);
+  }
   return count;
 }
 
 void join(LOGIN* list[], int count){
+#ifdef DEBUG_MODE
+	printf("DEBUG: join()\n");
+#endif
   char id[20], pass[20];
   while(1){
     printf("Enter new user id >> ");
@@ -40,6 +59,9 @@ void join(LOGIN* list[], int count){
 }
 
 int login(LOGIN* list[], int count){
+#ifdef DEBUG_MODE
+	printf("DEBUG: login()\n");
+#endif
   char id[20], pass[20];
   printf("Enter user id >> ");
   scanf("%s", id);
@@ -70,11 +92,27 @@ int login(LOGIN* list[], int count){
 }
 
 void logout(int* is_login){
+#ifdef DEBUG_MODE
+	printf("DEBUG: logout()\n");
+#endif
   *is_login = 0;
   printf("Logout!!\n");
 }
 
+void list(LOGIN* list[], int count){
+#ifdef DEBUG_MODE
+	printf("DEBUG: list()\n");
+#endif
+  printf("User list (id / password)\n");
+  for(int i = 0; i < count; i++){
+    printf("[%d] %s / %s\n", i+1, list[i]->id, list[i]->password);
+  }
+}
+
 void save_file(LOGIN* list[], int count, char* filename){
+#ifdef DEBUG_MODE
+	printf("DEBUG: save_file()\n");
+#endif
   FILE *datafile = fopen(filename, "w");
   for(int i=0; i<count; i++){
     fprintf(datafile, "%s %s\n", list[i]->id, list[i]->password);
