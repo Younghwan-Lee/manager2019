@@ -1,14 +1,29 @@
 #include "menu.h"
 
-int ask_menu(int is_login){
-// 파라미터 : 로그인여부 (0 No, 1Yes)
-// 리턴값 : 선택한 메뉴번호
-// 메뉴번호 : 1. Sign up 2. Log in 3. Log out 0. Exit
-  int menu;
-  if(is_login==0)
-    printf("Choose menu : 1. Sign up 2. Log in 0. Exit >> ");
-  else
-    printf("Choose menu : 3. Log out 0. Exit >> ");
-  scanf("%d", &menu);
-  return menu;
+int ask_command(int is_login, char command[]){
+#ifdef DEBUG_MODE
+	printf("DEBUG: ask_command()\n");
+#endif
+  int yes_or_no;
+  if(is_login==0){
+    if(strcmp(command, "login") == 0)
+      yes_or_no = 1;
+    else if(strcmp(command, "join") == 0)
+      yes_or_no = 2;
+    else if(strcmp(command, "list") == 0)
+      yes_or_no = 3;
+    else if(strcmp(command, "exit") == 0)
+      yes_or_no = 4;
+    else
+      yes_or_no = 5;
+  }
+
+  else{
+    if(strcmp(command, "logout") == 0)
+      yes_or_no = 6;
+    else
+      yes_or_no = 7;
+  }
+
+  return yes_or_no;
 }
